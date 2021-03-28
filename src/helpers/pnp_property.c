@@ -95,7 +95,9 @@ bool OnPropertyCompleteCallback(
 
             if (device->ApiVersion < r700_Request->ApiVersion)
             {
-                continue;
+                LogError("R700 : Unsupported API. Please upgrade firmware");
+                status = R700_STATUS_NOT_ALLOWED;
+                break;
             }
 
             switch (r700_Request->DtdlType)
@@ -150,7 +152,6 @@ void OnPropertyPatchCallback(
     int httpStatus                 = PNP_STATUS_SUCCESS;
 
     LogJsonPretty("R700 : %s() enter", JsonVal_Property, __FUNCTION__);
-    LogInfo("R700 : %s", PropertyName);
 
     for (int i = 0; i < R700_REST_MAX; i++)
     {
@@ -172,7 +173,7 @@ void OnPropertyPatchCallback(
     {
         if (device->ApiVersion < r700_Request->ApiVersion)
         {
-            LogError("R700 : Unsupported API. Please upgrade firmware");;
+            LogError("R700 : Unsupported API. Please upgrade firmware");
         }
         else if ((payload = json_serialize_to_string(JsonVal_Property)) == NULL)
         {

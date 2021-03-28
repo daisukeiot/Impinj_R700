@@ -1,4 +1,5 @@
 #include "pnp_utils.h"
+#include "restapi.h"
 
 /****************************************************************
 Helper function
@@ -620,6 +621,71 @@ IOTHUB_MESSAGE_HANDLE PnP_CreateTelemetryMessageHandle(const char* componentName
     }
 
     return messageHandle;
+}
+
+/****************************************************************
+Get Firmware Version from reader
+****************************************************************/
+void GetFirmwareVersion(
+    PIMPINJ_READER Reader)
+{
+    // get firmware version
+    PIMPINJ_R700_REST r700_GetStatusRequest = &R700_REST_LIST[SYSTEM_IMAGE];
+    JSON_Value *jsonVal_Image = NULL;
+    JSON_Value *jsonVal_Firmware = NULL;
+    JSON_Object *jsonObj_Image;
+    int httpStatus;
+    const char *firmware = NULL;
+    int i;
+    char *jsonResult;
+
+    Reader->ApiVersion = V_Unknown;
+
+    jsonResult = curlStaticGet(Reader->curl_static_session, r700_GetStatusRequest->EndPoint, &httpStatus);
+
+    if ((jsonVal_Image = json_parse_string(jsonResult)) == NULL)
+    {
+        LogInfo("R700 :  Unable to retrieve JSON Value for Image information from reader");
+    }
+    else if ((jsonObj_Image = json_value_get_object(jsonVal_Image)) == NULL)
+    {
+        LogInfo("R700 :  Unable to retrieve JSON Object for Image information");
+    }
+    else if ((firmware = json_object_get_string(jsonObj_Image, "primaryFirmware")) == NULL)
+    {
+        LogInfo("R700 :  Unable to retrieve primaryFirmware");
+    }
+    else
+    {
+        long major[4] = {0, 0, 0, 0};
+        char *next = (char *)firmware;
+        R700_REST_VERSION apiVersion = V1_0;
+
+        for (i = 0; i < 4 && *next != '\0'; i++)
+        {
+            major[i] = strtol(next, &next, 10);
+            next = next + 1;
+        }
+
+        for (i = 0; i < sizeof(IMPINJ_R700_API_MAPPING) / sizeof(IMPINJ_R700_API_VERSION); i++)
+        {
+            if (major[0] < IMPINJ_R700_API_MAPPING[i].Firmware.major)
+            {
+                continue;
+            }
+            else if (major[1] < IMPINJ_R700_API_MAPPING[i].Firmware.minor)
+            {
+                continue;
+            }
+            else
+            {
+                apiVersion = IMPINJ_R700_API_MAPPING[i].RestVersion;
+            }
+        }
+
+        LogInfo("R700 : REST API Version %s\r\n", MU_ENUM_TO_STRING(R700_REST_VERSION, apiVersion));
+        Reader->ApiVersion = apiVersion;
+    }
 }
 
 #endif

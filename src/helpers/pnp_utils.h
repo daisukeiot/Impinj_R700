@@ -52,17 +52,38 @@ GetObjectStringFromPayload(
     JSON_Value* Payload,
     const char* ParamName);
 
+void GetFirmwareVersion(
+    PIMPINJ_READER Reader);
+
 #ifndef PNPBRIDGE
 // Format used when building a response for a root property that does not contain metadata
 static const char g_propertyWithoutResponseSchemaWithoutComponent[] = "{\"%s\":%s}";
-static const char g_propertyWithoutResponseSchemaWithComponent[] = "{\"""%s\":{\"__t\":\"c\",\"%s\":%s}}";
-static const char g_propertyWithResponseSchemaWithoutComponent[] =  "{\"%s\":{\"value\":%s,\"ac\":%d,\"ad\":\"%s\",\"av\":%d}}";
-static const char g_propertyWithResponseSchemaWithComponent[] =  "{\"""%s\":{\"__t\":\"c\",\"%s\":{\"value\":%s,\"ac\":%d,\"ad\":\"%s\",\"av\":%d}}}";
+static const char g_propertyWithoutResponseSchemaWithComponent[]    = "{\""
+                                                                   "%s\":{\"__t\":\"c\",\"%s\":%s}}";
+static const char g_propertyWithResponseSchemaWithoutComponent[] = "{\"%s\":{\"value\":%s,\"ac\":%d,\"ad\":\"%s\",\"av\":%d}}";
+static const char g_propertyWithResponseSchemaWithComponent[]    = "{\""
+                                                                "%s\":{\"__t\":\"c\",\"%s\":{\"value\":%s,\"ac\":%d,\"ad\":\"%s\",\"av\":%d}}}";
 static const char PnP_TelemetryComponentProperty[] = "$.sub";
 
-STRING_HANDLE PnP_CreateReportedProperty(const char *componentName, const char *propertyName, const char *propertyValue);
-STRING_HANDLE PnP_CreateReportedPropertyWithStatus(const char *componentName, const char *propertyName, const char *propertyValue, int result, const char *description, int ackVersion);
-IOTHUB_MESSAGE_HANDLE PnP_CreateTelemetryMessageHandle(const char* componentName, const char* telemetryData);
+STRING_HANDLE
+PnP_CreateReportedProperty(
+    const char* componentName,
+    const char* propertyName,
+    const char* propertyValue);
+
+STRING_HANDLE
+PnP_CreateReportedPropertyWithStatus(
+    const char* componentName,
+    const char* propertyName,
+    const char* propertyValue,
+    int result,
+    const char* description,
+    int ackVersion);
+
+IOTHUB_MESSAGE_HANDLE
+PnP_CreateTelemetryMessageHandle(
+    const char* componentName,
+    const char* telemetryData);
 
 #endif
 

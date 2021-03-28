@@ -17,16 +17,16 @@ extern "C" {
 #include "impinj_reader_r700.h"
 #include "pnp_utils.h"
 
-#define R700_STATUS_OK 200
-#define R700_STATUS_CREATED 201
-#define R700_STATUS_ACCEPTED 202   // StatusResponse
-#define R700_STATUS_NO_CONTENT 204
-#define R700_STATUS_BAD_REQUEST 400      // ErrorResponse
-#define R700_STATUS_FORBIDDEN 403        // ErrorResponse
-#define R700_STATUS_NOT_FOUND 404        // ErrorResponse
-#define R700_STATUS_NOT_ALLOWED 405      // ErrorResponse
-#define R700_STATUS_NOT_CONFLICT 409     // ErrorResponse
-#define R700_STATUS_INTERNAL_ERROR 500   // ErrorResponse
+#define R700_STATUS_OK             200
+#define R700_STATUS_CREATED        201
+#define R700_STATUS_ACCEPTED       202 // StatusResponse
+#define R700_STATUS_NO_CONTENT     204
+#define R700_STATUS_BAD_REQUEST    400 // ErrorResponse
+#define R700_STATUS_FORBIDDEN      403 // ErrorResponse
+#define R700_STATUS_NOT_FOUND      404 // ErrorResponse
+#define R700_STATUS_NOT_ALLOWED    405 // ErrorResponse
+#define R700_STATUS_NOT_CONFLICT   409 // ErrorResponse
+#define R700_STATUS_INTERNAL_ERROR 500 // ErrorResponse
 #ifndef PNPBRIDGE
 #define PNP_STATUS_SUCCESS R700_STATUS_OK
 #define PNP_STATUS_INTERNAL_ERROR R700_STATUS_INTERNAL_ERROR
