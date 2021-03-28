@@ -8,7 +8,8 @@
 #define R700_RESTAPI_H
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <parson.h>

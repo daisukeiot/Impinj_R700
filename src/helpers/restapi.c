@@ -66,7 +66,6 @@ ImpinjReader_RequestDelete(
     return jsonVal;
 }
 
-
 JSON_Value*
 ImpinjReader_RequestGet(
     PIMPINJ_READER Device,
