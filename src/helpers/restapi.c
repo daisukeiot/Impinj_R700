@@ -112,7 +112,7 @@ ImpinjReader_RequestGet(
 #ifdef DEBUG_REST
     LogInfo("R700 : Curl %s >> Endpoint \"%s\"", api, endpoint);
 #endif
-    
+
     if (R700_Request->Request == READER_STATUS_POLL)
     {
         jsonResult = curlStaticGet(Device->curl_polling_session, endpoint, HttpStatus);
@@ -121,7 +121,7 @@ ImpinjReader_RequestGet(
     {
         jsonResult = curlStaticGet(Device->curl_static_session, endpoint, HttpStatus);
     }
-    
+
     // LogInfo("R700 : Curl %s << Status %d", api, *HttpStatus);
 
     switch (R700_Request->Request)
@@ -668,9 +668,9 @@ ImpinjReader_Convert_DeviceStatus(
     JSON_Value* jsonVal_deviceStatus  = NULL;
     JSON_Object* jsonObj_deviceStatus = NULL;
 
-    #ifdef DEBUG_REST
-        LogJsonPrettyStr("R700 : %s() enter", Json_String, __FUNCTION__);
-    #endif
+#ifdef DEBUG_REST
+    LogJsonPrettyStr("R700 : %s() enter", Json_String, __FUNCTION__);
+#endif
 
     if ((jsonVal_deviceStatus = json_parse_string(Json_String)) == NULL)
     {
