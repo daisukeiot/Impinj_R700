@@ -157,7 +157,6 @@ void OnPropertyPatchCallback(
     {
         r700_Request = &R700_REST_LIST[i];
 
-
         if (r700_Request->DtdlType != WRITABLE)
         {
             continue;
