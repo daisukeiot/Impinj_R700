@@ -60,13 +60,12 @@ CreateClientHandle(
 
     g_pnp_model_id = getenv(IOTPNP_MODEL_ID);
 
+#ifdef USE_EDGE_MODULES
+    return IoTHubModuleClient_LL_CreateFromEnvironment(MQTT_Protocol);
+#else
     if ((iothubCs = getenv(IOTHUB_CS)) != NULL)
     {
-#ifdef USE_EDGE_MODULES
-        return IoTHubModuleClient_LL_CreateFromEnvironment(MQTT_Protocol);
-#else
         return IoTHubDeviceClient_LL_CreateFromConnectionString(iothubCs, MQTT_Protocol);
-#endif
     }
     else
     {
@@ -75,12 +74,10 @@ CreateClientHandle(
             LogError("Cannot read environment variable=%s", DPS_IDSCOPE);
             return NULL;
         }
-#ifndef USE_EDGE_MODULES
         else if ((x509 = getenv(DPS_X509)) != NULL)
         {
             return ProvisionDeviceX509(scopeId, g_pnp_model_id, appContext);
         }
-#endif
         else
         {
             if ((deviceId = getenv(DPS_DEVICE_ID)) == NULL)
@@ -100,6 +97,7 @@ CreateClientHandle(
         }
     }
     return NULL;
+#endif
 }
 
 /*

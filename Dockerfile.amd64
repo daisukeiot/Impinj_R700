@@ -1,0 +1,44 @@
+FROM ubuntu:focal AS base
+
+ENV TZ=US/Pacific
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/time
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends build-essential libssl-dev uuid-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+FROM base AS build-env
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl build-essential pkg-config libcurl4-openssl-dev git cmake libssl-dev uuid-dev valgrind && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+COPY /src /build/src
+COPY /container/CMakeLists.txt /build
+
+WORKDIR /build
+RUN ls
+RUN git config --global http.sslVerify false
+RUN git clone https://github.com/Azure/azure-iot-sdk-c --recursive --quiet
+RUN mkdir cmake && \
+    ls && \
+    cd cmake && \
+    cmake .. -Duse_edge_modules=ON -Duse_prov_client=ON -Dhsm_type_x509:BOOL=OFF -Dhsm_type_symm_key:BOOL=ON -Dskip_samples:BOOL=ON -Duse_amqp:BOOL=OFF -Dbuild_service_client:BOOL=OFF -Duse_http=:BOOL=OFF -Duse_amqp=:BOOL=OFF -Dbuild_provisioning_service_client=:BOOL=OFF -Drun_e2e_tests=OFF && \
+    cmake --build .
+
+FROM base AS runtime
+RUN apt-get update && \
+    apt-get install -y curl sudo && \
+    rm -rf /var/lib/apt/lists/* 
+
+WORKDIR /app
+# ENV ReaderHost="192.168.120.101"
+# ENV ReaderUser="root"
+# ENV ReaderPass="impinj"
+# ENV PNP_MODEL_ID="dtmi:impinj:R700;1"
+
+COPY --from=build-env /build/cmake/impinj_r700 ./
+RUN useradd -ms /bin/bash moduleuser
+USER moduleuser
+EXPOSE 443
+
+CMD ["./impinj_r700"]

@@ -125,7 +125,6 @@ typedef enum _R700_REST_TYPE
 
 #define R700_ENDPONT_LENGTH 48
 
-
 typedef struct _IMPINJ_R700_REST
 {
     R700_REST_VERSION ApiVersion;

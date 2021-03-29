@@ -72,6 +72,8 @@ static void dpsRegisterDeviceCallback(PROV_DEVICE_RESULT register_result, const 
     }
 }
 
+#ifndef USE_EDGE_MODULES
+
 CLIENT_LL_HANDLE ProvisionDeviceX509(const char* scopeId, const char* modelId, APP_CONTEXT* appContext)
 {
     CLIENT_LL_HANDLE deviceHandle          = NULL;
@@ -168,7 +170,7 @@ CLIENT_LL_HANDLE ProvisionDeviceX509(const char* scopeId, const char* modelId, A
 
     return deviceHandle;
 }
-
+#endif //USE_EDGE_MODULES
 
 CLIENT_LL_HANDLE ProvisionDevice(const char* scopeId, const char* deviceId, const char* deviceKey, const char* modelId, APP_CONTEXT* appContext)
 {
